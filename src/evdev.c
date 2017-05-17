@@ -45,12 +45,22 @@ static void
 EvdevApplyCalibration(EvdevPtr pEvdev, ValuatorMask *mask)
 {
     int i;
-    int xorgmax, xorgmin;
-    int realmax, realmin;
+
+    int pixmapWidth = pEvdev->shared->pixmapWidth;
+    int pixmapHeight = pEvdev->shared->pixmapHeight;
+    int surfaceWidth = pEvdev->shared->surfaceWidth;
+    int surfaceHeight = pEvdev->shared->surfaceHeight;
+
+    if (pixmapWidth == 0 || pixmapHeight == 0 || surfaceWidth == 0 || surfaceHeight == 0)
+    {
+        return;
+    }
+
 
     for (i = 0; i <= 1; i++)
     {
         int val;
+        int max1, max2;
 
         if (!valuator_mask_isset(mask, i))
             continue;
@@ -58,19 +68,14 @@ EvdevApplyCalibration(EvdevPtr pEvdev, ValuatorMask *mask)
         val = valuator_mask_get(mask, i);
 
         if (i == 0) { //X
-            xorgmax = 640;
-            xorgmin = 0;
-            realmax = 1024;
-            realmin = 0;
+            max1 = surfaceWidth;
+            max2 = pixmapWidth;
         } else { //Y
-            xorgmax = 480;
-            xorgmin = 0;
-            realmax = 552;
-            realmin = 0;
+            max1 = surfaceHeight;
+            max2 = pixmapHeight;
         }
 
-        if (0)
-            val = xf86ScaleAxis(val, xorgmax, xorgmin, realmax, realmin); //xorgmax, xorgmin, scrnmax, scrnmin
+        val = xf86ScaleAxis(val, max2, 0, max1, 0);
 
         valuator_mask_set(mask, i, val);
     }
@@ -343,7 +348,7 @@ EvdevOff(DeviceIntPtr device)
 static int
 EvdevOpenDevice(InputInfoPtr pInfo)
 {
-    //EvdevPtr pEvdev = pInfo->private;
+    EvdevPtr pEvdev = pInfo->private;
 
 
     mkfifo("/dev/sparkle_input", 0666);
@@ -362,13 +367,23 @@ EvdevOpenDevice(InputInfoPtr pInfo)
 
     fchmod(pInfo->fd, 0666);
 
+    //FIXME
+    pEvdev->shared_info = shared_resource_open("/dev/sparkle_info", sizeof(struct sparkle_shared_t), 0, (void **)&pEvdev->shared);
+    if (pEvdev->shared_info == NULL)
+    {
+        return !Success;
+    }
+
     return Success;
 }
 
 static void
 EvdevCloseDevice(InputInfoPtr pInfo)
 {
-    //EvdevPtr pEvdev = pInfo->private;
+    EvdevPtr pEvdev = pInfo->private;
+
+    //FIXME Why crash?
+    //shared_resource_close(pEvdev->shared_info);
 
     if (pInfo->fd >= 0)
     {

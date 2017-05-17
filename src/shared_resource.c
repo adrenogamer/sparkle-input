@@ -1,0 +1,1 @@
+../../xf86-video-dummy-0.3.7/src/shared_resource.c

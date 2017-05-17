@@ -11,10 +11,16 @@
 #include <xf86Xinput.h>
 #include <xf86_OSproc.h>
 
+#include "shared_resource.h"
+#include "sparkle_shared.h"
+
 
 typedef struct
 {
     ValuatorMask *abs_vals;
+    struct shared_resource_t *shared_info;
+    struct sparkle_shared_t *shared;
 } EvdevRec, *EvdevPtr;
 
 #endif
+
