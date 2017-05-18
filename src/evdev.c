@@ -350,28 +350,29 @@ EvdevOpenDevice(InputInfoPtr pInfo)
 {
     EvdevPtr pEvdev = pInfo->private;
 
-
-    mkfifo("/dev/sparkle_input", 0666);
-
     if (pInfo->fd < 0)
     {
+        pEvdev->shared_info = shared_resource_open("/dev/sparkle_info", sizeof(struct sparkle_shared_t), 0, (void **)&pEvdev->shared);
+        if (pEvdev->shared_info == NULL)
+        {
+            return !Success;
+        }
+
+        mkfifo("/dev/sparkle_input", 0666);
+
         do {
             pInfo->fd = open("/dev/sparkle_input", O_RDWR | O_NONBLOCK, 0);
         } while (pInfo->fd < 0 && errno == EINTR);
-    }
 
-    if (pInfo->fd < 0) {
-        xf86IDrvMsg(pInfo, X_ERROR, "Unable to open evdev device\n");
-        return BadValue;
-    }
+        if (pInfo->fd < 0)
+        {
+            xf86IDrvMsg(pInfo, X_ERROR, "Unable to open evdev device\n");
+            return BadValue;
+        }
 
-    fchmod(pInfo->fd, 0666);
+        fchmod(pInfo->fd, 0666);
 
-    //FIXME
-    pEvdev->shared_info = shared_resource_open("/dev/sparkle_info", sizeof(struct sparkle_shared_t), 0, (void **)&pEvdev->shared);
-    if (pEvdev->shared_info == NULL)
-    {
-        return !Success;
+        //XXX Clear pipe?
     }
 
     return Success;
@@ -382,13 +383,11 @@ EvdevCloseDevice(InputInfoPtr pInfo)
 {
     EvdevPtr pEvdev = pInfo->private;
 
-    //FIXME Why crash?
-    //shared_resource_close(pEvdev->shared_info);
-
     if (pInfo->fd >= 0)
     {
         close(pInfo->fd);
         pInfo->fd = -1;
+        shared_resource_close(pEvdev->shared_info);
     }
 }
 
