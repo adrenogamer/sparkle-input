@@ -22,10 +22,9 @@
 
 # Initialize Autoconf
 AC_PREREQ([2.60])
-AC_INIT([xf86-input-evdev],
-        [2.10.4],
-        [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg],
-        [xf86-input-evdev])
+AC_INIT([sparkle-input],
+        [0.1.0],
+        [knight@mail.ua])
 AC_CONFIG_SRCDIR([Makefile.am])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_AUX_DIR(.)
@@ -45,10 +44,7 @@ XORG_DEFAULT_OPTIONS
 
 # Obtain compiler/linker options from server and required extensions
 PKG_CHECK_MODULES(XORG, [xorg-server >= 1.12] xproto [inputproto >= 2.1.99.3])
-PKG_CHECK_MODULES(UDEV, libudev)
 
-PKG_CHECK_MODULES(LIBEVDEV, [libevdev >= 0.4])
-PKG_CHECK_MODULES(MTDEV, mtdev)
 
 # Define a configure option for an alternate input module directory
 AC_ARG_WITH(xorg-module-dir,
@@ -75,12 +71,10 @@ sdkdir=`$PKG_CONFIG --variable=sdkdir xorg-server`
 AC_ARG_WITH([sdkdir], [], [sdkdir="$withval"])
 AC_SUBST([sdkdir])
 
-DRIVER_NAME=evdev
+DRIVER_NAME=sparkleinput
 AC_SUBST([DRIVER_NAME])
 
 AC_CONFIG_FILES([Makefile
-                 src/Makefile
-                 man/Makefile
-                 include/Makefile
-                 xorg-evdev.pc])
+                 src/Makefile])
 AC_OUTPUT
+

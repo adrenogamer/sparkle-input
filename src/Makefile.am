@@ -38,4 +38,6 @@ AM_CPPFLAGS =-I$(top_srcdir)/include $(LIBEVDEV_CFLAGS)
 
 @DRIVER_NAME@_drv_la_SOURCES += shared_resource.c \
                                 shared_resource.h \
-                                sparkle_shared.h
+                                sparkle_shared.h \
+                                sion_keymap.h
+

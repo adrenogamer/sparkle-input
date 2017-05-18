@@ -1,1 +1,1 @@
-../../xf86-video-dummy-0.3.7/src/sparkle_shared.h
+../../sparkle-video/src/sparkle_shared.h

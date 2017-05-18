@@ -2,7 +2,7 @@
 #include "config.h"
 #endif
 
-#include "evdev.h"
+#include "sparkleinput.h"
 
 #include <linux/version.h>
 #include <sys/stat.h>
@@ -169,7 +169,7 @@ EvdevAddKeyClass(DeviceIntPtr device)
 
     XkbGetRulesDflts(&defaults);
 
-    xf86ReplaceStrOption(pInfo->options, "xkb_rules", "sparkle2");
+    xf86ReplaceStrOption(pInfo->options, "xkb_rules", "sparkleinput");
     rmlvo.rules = xf86SetStrOption(pInfo->options, "xkb_rules", NULL);
     rmlvo.model = xf86SetStrOption(pInfo->options, "xkb_model", defaults.model);
     rmlvo.layout = xf86SetStrOption(pInfo->options, "xkb_layout", defaults.layout);
@@ -427,9 +427,9 @@ EvdevProc(DeviceIntPtr device, int what)
 
 //=============================================================================
 
-_X_EXPORT InputDriverRec SPARKLE2 = {
+_X_EXPORT InputDriverRec SPARKLEINPUT = {
     1,
-    "sparkle2",
+    "sparkleinput",
     NULL,
     EvdevPreInit,
     EvdevUnInit,
@@ -450,13 +450,13 @@ EvdevUnplug(pointer	p)
 static pointer
 EvdevPlug(pointer module, pointer options, int *errmaj, int *errmin)
 {
-    xf86AddInputDriver(&SPARKLE2, module, 0);
+    xf86AddInputDriver(&SPARKLEINPUT, module, 0);
     return module;
 }
 
 static XF86ModuleVersionInfo EvdevVersionRec =
 {
-    "sparkle2",
+    "sparkleinput",
     MODULEVENDORSTRING,
     MODINFOSTRING1,
     MODINFOSTRING2,
@@ -468,7 +468,7 @@ static XF86ModuleVersionInfo EvdevVersionRec =
     {0, 0, 0, 0}
 };
 
-_X_EXPORT XF86ModuleData sparkle2ModuleData =
+_X_EXPORT XF86ModuleData sparkleinputModuleData =
 {
     &EvdevVersionRec,
     EvdevPlug,

@@ -22,20 +22,14 @@
 # Provide an sdk location that is writable by the evdev module
 DISTCHECK_CONFIGURE_FLAGS = --with-sdkdir='$${includedir}/xorg'
 
-SUBDIRS = src man include
-MAINTAINERCLEANFILES = ChangeLog INSTALL
+SUBDIRS = src
+MAINTAINERCLEANFILES = ChangeLog
 
-pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = xorg-evdev.pc
 
-dist_xorgconf_DATA = 10-evdev.conf
-
-.PHONY: ChangeLog INSTALL
-
-INSTALL:
-	$(INSTALL_CMD)
+.PHONY: ChangeLog
 
 ChangeLog:
 	$(CHANGELOG_CMD)
 
-dist-hook: ChangeLog INSTALL
+dist-hook: ChangeLog
+
