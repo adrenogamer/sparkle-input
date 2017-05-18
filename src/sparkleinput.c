@@ -355,6 +355,7 @@ EvdevOpenDevice(InputInfoPtr pInfo)
         pEvdev->shared_info = shared_resource_open("/dev/sparkle_info", sizeof(struct sparkle_shared_t), 0, (void **)&pEvdev->shared);
         if (pEvdev->shared_info == NULL)
         {
+            xf86IDrvMsg(pInfo, X_ERROR, "Failed to open shared resources\n");
             return !Success;
         }
 
