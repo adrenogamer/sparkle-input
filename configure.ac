@@ -31,6 +31,8 @@ AC_CONFIG_AUX_DIR(.)
 
 # Initialize Automake
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
+# git clone
+AM_MAINTAINER_MODE
 
 # Initialize libtool
 AC_DISABLE_STATIC
@@ -62,14 +64,6 @@ AC_ARG_WITH(xorg-conf-dir,
             [xorgconfdir="$prefix/share/X11/xorg.conf.d"])
 AC_SUBST(xorgconfdir)
 
-# X Server SDK location is required to install evdev header files
-# This location is also relayed in the xorg-evdev.pc file
-sdkdir=`$PKG_CONFIG --variable=sdkdir xorg-server`
-
-# Workaround overriding sdkdir to be able to create a tarball when user has no
-# write permission in sdkdir. See DISTCHECK_CONFIGURE_FLAGS in Makefile.am
-AC_ARG_WITH([sdkdir], [], [sdkdir="$withval"])
-AC_SUBST([sdkdir])
 
 DRIVER_NAME=sparkleinput
 AC_SUBST([DRIVER_NAME])
