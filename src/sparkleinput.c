@@ -148,6 +148,17 @@ EvdevReadInput(InputInfoPtr pInfo)
             xf86PostKeyboardEvent(pInfo->dev, sion_keymap[_event.arg1], 0);
         }
     }
+    else if (_event.type == 2)
+    {
+        if (_event.action == 0)
+        {
+            xf86PostKeyboardEvent(pInfo->dev, _event.arg1, 1);
+        }
+        else if (_event.action == 1)
+        {
+            xf86PostKeyboardEvent(pInfo->dev, _event.arg1, 0);
+        }
+    }
 
     //xf86PostKeyboardEvent(pInfo->dev, pEvdev->queue[i].detail.key, pEvdev->queue[i].val);
     //xf86PostButtonEvent(pInfo->dev, Absolute, pEvdev->queue[i].detail.key, pEvdev->queue[i].val, 0, 0);
